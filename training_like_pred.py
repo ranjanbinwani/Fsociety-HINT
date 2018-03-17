@@ -18,6 +18,8 @@ from keras.layers import Flatten
 from keras.preprocessing.sequence import pad_sequences
 from keras.callbacks import ModelCheckpoint
 import nltk
+import pickle
+from utils import getFollowerCount, getSeconds
 nltk.download('stopwords')
 def clean_text(text):
     words = text.split()
@@ -106,6 +108,9 @@ vocab_size = len(words)
 for i in range(len(words)):
     word2int[words[i]] = i
     int2word[i] = words[i]
+    
+with open('word2int.pickle', 'wb') as handle:
+    pickle.dump(word2int, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 t = []
 for i in range(len(text)):
@@ -118,13 +123,18 @@ t = pad_sequences(t, max_length)
 t = np.array(t)
 
 X_final = np.append(X, t, axis = 1)
-X_final = X_final[:,1:]
+#X_final = X_final[:,1:]
+
+df_new = pd.read_csv('log.csv')
+data = str(df_new.iloc[:,0].values).split(' ')[4]
+
+X_final[:,0] = data
 
 from datetime import datetime
 for i in range(len(X_final)):
     current = np.datetime64(datetime.now())
     #print(X_final[i,0])
-    st = str(str(X_final[i,0]).split(' ')[0])
+    st = str(str(X_final[i,1]).split(' ')[0])
     fn = str(np.datetime64('today'))
     try:
         s = datetime.strptime(str(st), '%d-%m-%Y') 
@@ -135,23 +145,51 @@ for i in range(len(X_final)):
     except:
         f = datetime.strptime(str(fn), '%d-%m-%Y')
     tdelta = f - s  
-    X_final[i,0] = tdelta.total_seconds()
+    X_final[i,1] = tdelta.total_seconds()
 
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X_final, y, test_size = 0.2)
 
 from sklearn.ensemble import RandomForestRegressor
-reg = RandomForestRegressor(n_estimators=300)
+reg = RandomForestRegressor(n_estimators=100)
 reg.fit(X_train, y_train)
 
+# saving model
 import pickle
 filename = 'model_like_pred.sav'
 pickle.dump(reg, open(filename, 'wb'))
 
-
 pred = reg.predict(X_test)
 
-model = model(vocab_size, max_length+1)
+model = model(vocab_size, max_length+2)
 model.fit(X_train, y_train, epochs = 20)
+
+
+# TESTING
+
+username = "realdonaldtrump"
+tweet = "It's a wonderful day. People are mad"
+date = "2018-03-19"
+followers = getFollowerCount(username)
+seconds = getSeconds(date)
+
+X = np.zeros((1, 2), dtype=object)
+X[0, 0] = followers
+X[0, 1] = seconds
+tweet = clean_text(tweet)
+t = []
+_temp = []
+for j in tweet.split():
+    if j in word2int:
+        _temp.append(word2int[j])
+t.append(_temp)
+t = pad_sequences(t, max_length)
+t = np.array(t)
+
+X_f_test = np.append(X, t, axis = 1)
+
+pi = int(reg.predict(X_f_test))
+print (pi)
+        
 
 
