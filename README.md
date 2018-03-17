@@ -12,7 +12,7 @@ This application project tends to solve three major real life problems that peop
 
 
 ## Contributors
-- [Ranjan Binwani](https://github.com/ranjanbinwani)
-- [Aayush Sinha](https://github.com/aayushsinha44)
-- [Kaushal Kumar Agarwal](https://github.com/kaushalag29)
-- [Prince](https://github.com/aayushbhaskar)
+- [Ranjan Binwani](https://github.com/ranjanbinwani) (Data Mining and Web Frontend)
+- [Aayush Sinha](https://github.com/aayushsinha44) (Machine Learning and Backend)
+- [Kaushal Kumar Agarwal](https://github.com/kaushalag29) (Data Mining and Web Frontend)
+- [Prince](https://github.com/aayushbhaskar) (Machine Learning)
