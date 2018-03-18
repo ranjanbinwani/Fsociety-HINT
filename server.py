@@ -15,7 +15,9 @@ import tweepy
 import pandas as pd
 import numpy as np
 import csv
+import torch
 from gensim.summarization import summarize
+from utils_text_gen import generate
 
 consumer_key = 'HRlTA8OLC6ZmICZIgU21Nn9pX'
 consumer_secret = 'U7we8922EU3sgT17BlrYoCPADzhICHIZoN1BFhXHQJ4SwObjJD'
@@ -87,6 +89,19 @@ def getSummary():
         return jsonify(data)
     else:
         return jsonify({"message":"Invalid Request"})
+    
+@app.route('/generate',methods=['GET', 'POST'])
+def getGenerateText():
+    if request.method == "POST":
+        text = request.form.get('text')
+        if text == '':
+            return jsonify({"message":"Incomplete Data"})
+        decoder = torch.load('generate.pt')
+        data = generate(decoder, text)
+        return jsonify({"data":data})
+    else:
+        return jsonify({"message":"Invalid Request"})
+        
 
 def scrap(screen_name):  
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
