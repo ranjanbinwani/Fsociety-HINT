@@ -47,7 +47,8 @@ def clean_text(text):
     text = re.sub("'", " ", text)
     words = text.split()
     table = str.maketrans('', '', string.punctuation)
-    words = [w for w in words if 'https' not in w and 'xf' not in w and 'xe' not in w and 'xc' not in w]
+    words = [w for w in words if 'https' not in w and 'xf' not in w and 'xe' not in w and 'xc' not in w 
+             and 'x9' not in w and '#' not in w]
     stripped = [w.translate(table) for w in words]
     porter = PorterStemmer()
     stemmed = [porter.stem(word) for word in stripped]
@@ -65,7 +66,8 @@ def clean_light(text):
     text = re.sub("'", " ", text)
     words = text.split() 
     #table = str.maketrans('', '', string.punctuation)
-    words = [w for w in words if 'https' not in w and 'xf' not in w and 'xe' not in w and 'xc' not in w]
+    words = [w for w in words if 'https' not in w and 'xf' not in w and 'xe' not in w and 'xc' not in w 
+             and 'x9' not in w and '#' not in w]
     #stripped = [w.translate(table) for w in words]
     words = [word.lower() for word in words]
     text = ' '.join(words)
