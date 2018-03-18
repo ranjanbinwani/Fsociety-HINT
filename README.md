@@ -14,7 +14,8 @@ This application project tends to solve three major real life problems that peop
 1. Keras - 2.1
 2. Pytorch - 0.3
 3. Python - 3.5
-4. HTML and CSS for web development
+4. Flask - 0.12
+5. HTML and CSS for web development
 
 ## Contributors
 - [Ranjan Binwani](https://github.com/ranjanbinwani) (Data Mining and Web Frontend)
